@@ -2,7 +2,8 @@ var totalSeconds = 60;
 var secondsElapsed = 0;
 var interval;
 var score = [0];
-var userName = document.getElementById("userName");
+var newHighscore = "";
+var userName;
 var userScoreEl = document.getElementById("user-score");
 var questionHead = document.getElementById("questions");
 var answerChoices = document.getElementById("answers");
@@ -10,8 +11,8 @@ var questionNumber = -1;
 var secondsLeft;
 var startButton = document.querySelector("#startQuiz");
 var submitBtn = document.querySelector("#submitBtn");
-var resetButton = document.querySelector("#restartBtn");
-var clearButton = document.querySelector("clearBtn");
+var resetButton = document.querySelector(".restartBtn");
+var clearButton = document.querySelector(".clearBtn");
 var secondsDisplay = document.querySelector("#Timer");
 var quizArea = document.querySelector(".container");
 var scoreArea = document.querySelector("#score-list");
@@ -118,11 +119,18 @@ function showFeedback() {
 function displayScore() {
   document.getElementById("quiz").classList.add('d-none');
   document.getElementById("submit-score").classList.remove('d-none');
-  userScoreEl.textContent = "Your final score is " + score + "/4 in " + secondsElapsed + " seconds";
-  var recScore = userScoreEl.textContent;
   document.getElementById("highScoresheet").classList.remove('d-none')
-  myJSON = JSON.parse(recScore)
-  localStorage.setItem("scoreJSON", recScore);
+  userScoreEl.textContent = "Your final score is " + score + "/4 in " + secondsElapsed + " seconds";
+  //document.getElementById("highScoresheet").classList.remove('d-none')
+  userName = document.getElementById("userName");
+  userName = userName.value
+  var recScore = {score , secondsElapsed , userName};
+  console.log(recScore)
+  console.log(score)
+  console.log(secondsElapsed)
+  console.log(userName)
+  myJSON = JSON.stringify(recScore)
+  localStorage.setItem("scoreJSON", myJSON);
 }
 function addScore() {
   var text = localStorage.getItem("scoreJSON");
@@ -130,9 +138,10 @@ function addScore() {
   document.getElementById("score-list").innerHTML = obj.text;
 }
 function reset() {
-  document.getElementById("home").classList.add('d-none');
-  document.getElementById("quiz").classList.remove('d-none');
-  document.getElementById("highScoresheet").classList.add('d-none')
+ history.go()
+}
+function clear () {
+  localStorage.clear()
 }
 
 
@@ -140,7 +149,13 @@ function reset() {
 startButton.addEventListener("click", startTimer);
 startButton.addEventListener("click", questionroll);
 submitBtn.addEventListener("click", addScore);
-clearButton.addEventListener("click", clearscores);
+clearButton.addEventListener("click", clear);
 resetButton.addEventListener("click", reset);
+document.body.addEventListener("click", function(){
+  if ( event.target.id === "userName") {
+    userName = event.target.value;
+  }
+})
+
 
 
